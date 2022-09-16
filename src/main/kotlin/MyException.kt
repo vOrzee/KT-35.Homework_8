@@ -1,3 +1,2 @@
-class PublishedBeforeException(msg: String) : Exception(msg)
-class PostNotFoundException(msg: String) : Exception(msg)
-class IndexOutOfBoundsReasonReportException(msg: String) : Exception(msg)
+class PublishedBeforeException(msg: String?) : Exception(msg)
+class NotesNotFoundException(msg: String?) : Exception(msg)

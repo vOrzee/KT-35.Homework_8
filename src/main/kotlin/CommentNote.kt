@@ -1,11 +1,12 @@
-import attachments.Attachment
 import java.text.SimpleDateFormat
 import java.util.*
 
-data class CommentBoard(
-    val fromID: Int,
+data class CommentNote(
+    val fromId: Int,
+    val noteId: Int,
     var text: String,
-    var attachments: Attachment? = null,
+    val answerTo: Long = -1, //Ссылка на ID комментария, которому отвечают
+    val isDeleted: Boolean = false
 ) {
     private val id: Long
     private var date: Int? = null
