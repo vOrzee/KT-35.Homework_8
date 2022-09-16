@@ -1,2 +1,2 @@
-class PublishedBeforeException(msg: String?) : Exception(msg)
-class NotesNotFoundException(msg: String?) : Exception(msg)
+class PublishedBeforeException(msg: String? = null) : Exception(msg)
+class NotFoundException(msg: String? = null) : Exception(msg)

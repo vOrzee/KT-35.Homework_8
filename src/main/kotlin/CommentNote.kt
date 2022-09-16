@@ -6,7 +6,7 @@ data class CommentNote(
     val fromId: Int,
     val noteId: Int,
     var text: String,
-    val answerTo: Long = -1, //Ссылка на ID комментария, которому отвечают
+    val replyTo: Long = -1, //Ссылка на ID комментария, которому отвечают
     val isDeleted: Boolean = false
 ) {
     private val id: Long
