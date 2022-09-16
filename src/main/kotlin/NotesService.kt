@@ -31,14 +31,13 @@ object NotesService {
     }
 
     fun delete(noteId: Int): Int {
-        val note = storage.keys.find { it.getID() == noteId } ?: throw NotFoundException()
+        val note = storage.keys.find { it.getID() == noteId } ?: return 0
         storage.remove(note)
         if (storage.containsKey(note)) return 0
         return 1
     }
 
     fun deleteComment(commentId: Long, ownerId: Int = this.ownerId): Int {
-        var comment: CommentNote? = null
         storage.values.forEach { commentsForPost ->
             val s = commentsForPost.find { it.getID() == commentId }
             if (s != null) {
@@ -46,7 +45,7 @@ object NotesService {
                 return 1
             }
         }
-        throw NotFoundException()
+        return 0
     }
 
 //    edit
