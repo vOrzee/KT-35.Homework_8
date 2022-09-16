@@ -4,12 +4,13 @@ import java.util.*
 
 data class Note(
     val ownerId:Int,
-    var tittle:String,
-    var text:String,
-    val viewUrl:String = "BK.KOM/NOTES",
-    var privacyView:String = "Public",
-    var canComment:Boolean = true,
-    val textWiki:String = "LINK"
+    val title: String,
+    val text: String,
+    val privacy: Byte = 0,
+    val privacyComment: Byte = 0,
+    val privacyView: String = "all",
+    val privacyViewComment: String = "all",
+    val isDeleted: Boolean = false
 ):NotesCrud<Note> {
     private val id: Int
     private var date: Int? = null
