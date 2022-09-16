@@ -5,25 +5,26 @@ data class Note(
     val ownerId:Int,
     var tittle:String,
     var text:String,
-    var comments:Int = 0,
-    var readComments:Int = 0,
     val viewUrl:String = "BK.KOM/NOTES",
-    var privacyView:Array<String> = arrayOf("Public"),
-    var privacyComment:Array<String> = arrayOf("Public"),
+    var privacyView:String = "Public",
     var canComment:Boolean = true,
     val textWiki:String = "LINK"
 ){
-    private val id: Long
+    private val id: Int
     private var date: Int? = null
+    private var comments:Int = 0
+    private var readComments:Int = 0
 
     companion object {
-        private var count: Long = 0
+        private var count: Int = 0
     }
 
     init {
         count += 1
         id = count
         date = (System.currentTimeMillis() / 1000).toInt()
+        comments = 0
+        readComments = 0
     }
 
     fun getDate(): String =
