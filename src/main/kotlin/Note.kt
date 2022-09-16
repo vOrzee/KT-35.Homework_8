@@ -10,7 +10,7 @@ data class Note(
     var privacyView:String = "Public",
     var canComment:Boolean = true,
     val textWiki:String = "LINK"
-){
+):NotesCrud<Note> {
     private val id: Int
     private var date: Int? = null
     private var comments:Int = 0

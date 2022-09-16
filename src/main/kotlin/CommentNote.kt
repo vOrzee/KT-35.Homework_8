@@ -8,7 +8,7 @@ data class CommentNote(
     var text: String,
     val replyTo: Long = -1, //Ссылка на ID комментария, которому отвечают
     val isDeleted: Boolean = false
-) {
+): NotesCrud<CommentNote> {
     private val id: Long
     private var date: Int? = null
 
