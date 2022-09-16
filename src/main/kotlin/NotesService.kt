@@ -1,39 +1,53 @@
 import ru.netology.notes.*
 
 object NotesService {
-    var storage:MutableMap<Note,MutableList<CommentNote>> = mutableMapOf()
-    val ownerId:Int = 734
+    var storage: MutableMap<Note, MutableList<CommentNote>> = mutableMapOf()
+    val ownerId: Int = 734
 
-    fun add(title:String,
-            text:String,
-            privacy:Byte = 0,
-            commentPrivacy:Byte = 0,
-            privacyView:String = "all",
-            privacyComment:String = "all"
-    ):Int {
-        val note = Note(this.ownerId,title,text,privacy,commentPrivacy,privacyView,privacyComment,false)
+    fun add(
+        title: String,
+        text: String,
+        privacy: Byte = 0,
+        commentPrivacy: Byte = 0,
+        privacyView: String = "all",
+        privacyComment: String = "all"
+    ): Int {
+        val note = Note(this.ownerId, title, text, privacy, commentPrivacy, privacyView, privacyComment, false)
         note.add(note, storage.keys)
-        return storage.keys.find { it==note }?.getID() ?: throw NotFoundException()
+        return storage.keys.find { it == note }?.getID() ?: throw NotFoundException()
     }
 
     fun createComment(
-        noteId:Int,
-        message:String,
-        ownerId:Int = this.ownerId,
-        replyTo:Long = -1,
-        guid:String = System.currentTimeMillis().toString()
-    ):Long{
-        val note = storage.keys.find { it.getID()==noteId } ?: throw NotFoundException()
-        val comment = CommentNote(ownerId,noteId,message,replyTo)
+        noteId: Int,
+        message: String,
+        ownerId: Int = this.ownerId,
+        replyTo: Long = -1,
+        guid: String = System.currentTimeMillis().toString()
+    ): Long {
+        val note = storage.keys.find { it.getID() == noteId } ?: throw NotFoundException()
+        val comment = CommentNote(ownerId, noteId, message, replyTo)
         storage[note]?.add(comment)
         return comment.getID()
     }
 
-//    delete
-//    Удаляет заметку текущего пользователя.
+    fun delete(noteId: Int): Int {
+        val note = storage.keys.find { it.getID() == noteId } ?: throw NotFoundException()
+        storage.remove(note)
+        if (storage.containsKey(note)) return 0
+        return 1
+    }
 
-//    deleteComment
-//    Удаляет комментарий к заметке.
+    fun deleteComment(commentId: Long, ownerId: Int = this.ownerId): Int {
+        var comment: CommentNote? = null
+        storage.values.forEach { commentsForPost ->
+            val s = commentsForPost.find { it.getID() == commentId }
+            if (s != null) {
+                commentsForPost.find { it.getID() == commentId }?.isDeleted = true
+                return 1
+            }
+        }
+        throw NotFoundException()
+    }
 
 //    edit
 //    Редактирует заметку текущего пользователя.
