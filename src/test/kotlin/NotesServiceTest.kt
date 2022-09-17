@@ -1,4 +1,3 @@
-import org.junit.After
 import org.junit.Before
 
 import org.junit.Assert.*
@@ -6,8 +5,8 @@ import org.junit.Test
 import kotlin.random.Random
 
 class NotesServiceTest {
-    private val thisUserId: Int = NotesService.THIS_USER_ID
-    var otherOwnerId: Int = NotesService.THIS_USER_ID
+    private val thisUserId: Int = NotesService.thisUserId
+    var otherOwnerId: Int = NotesService.thisUserId
 
     @Before
     fun prepare() {
@@ -38,9 +37,24 @@ class NotesServiceTest {
 
     @Test (expected = NotFoundException::class)
     fun createCommentFailed(){
-        assertEquals(4,NotesService.createComment(6,"Комментарий ко 2-ой заметке"))
+        NotesService.createComment(6,"Комментарий ко 2-ой заметке")
     }
 
+    @Test
+    fun deleteSuccess(){
+        assertEquals(1,NotesService.delete(2))
+    }
+
+    @Test
+    fun deleteFailed(){
+        assertEquals(0,NotesService.delete(6))
+    }
+
+    @Test (expected = AccessDeniedException::class)
+    fun deleteFailedAccess(){
+        NotesService.thisUserId = 5
+        NotesService.delete(2)
+    }
 
     @Test
     fun cleaning() {

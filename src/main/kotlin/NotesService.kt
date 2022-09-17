@@ -2,12 +2,12 @@ import ru.netology.notes.*
 
 object NotesService {
     var storage: MutableMap<Note, MutableList<CommentNote>> = mutableMapOf()
-    var THIS_USER_ID: Int = 734 //Значение по умолчанию
+    var thisUserId: Int = 734 //Значение по умолчанию
 
     fun add(
         title: String,
         text: String,
-        ownerId: Int = THIS_USER_ID,
+        ownerId: Int = thisUserId,
         privacy: Byte = 0,
         commentPrivacy: Byte = 0,
         privacyView: String = "all",
@@ -21,7 +21,7 @@ object NotesService {
     fun createComment(
         noteId: Int,
         message: String,
-        ownerId: Int = THIS_USER_ID,
+        ownerId: Int = thisUserId,
         replyTo: Long = -1
     ): Long { // Добавляет новый комментарий к заметке.
         // Параметр guid: String не используется
@@ -33,13 +33,13 @@ object NotesService {
 
     fun delete(noteId: Int): Int { // Удаляет заметку текущего пользователя.
         val note = storage.keys.find { it.id == noteId } ?: return 0
-        if (note.ownerId != THIS_USER_ID) throw AccessDeniedException("Access denied")
+        if (note.ownerId != thisUserId) throw AccessDeniedException("Access denied")
         note.delete(note, storage.keys)
         if (storage.containsKey(note)) return 0
         return 1
     }
 
-    fun deleteComment(commentId: Long, ownerId: Int = THIS_USER_ID): Int { // Удаляет комментарий к заметке.
+    fun deleteComment(commentId: Long, ownerId: Int = thisUserId): Int { // Удаляет комментарий к заметке.
         storage.values.forEach { commentsForNote ->
             val s = commentsForNote.find { it.id == commentId }
             if (s != null) {
@@ -63,7 +63,7 @@ object NotesService {
         privacyComment: String = "all"
     ): Int { // Редактирует заметку текущего пользователя.
         val oldContent = storage.keys.find { it.id == noteId } ?: return 0
-        val newContent = Note(THIS_USER_ID, title, text, privacy, commentPrivacy, privacyView, privacyComment)
+        val newContent = Note(thisUserId, title, text, privacy, commentPrivacy, privacyView, privacyComment)
         oldContent.edit(oldContent, newContent, storage.keys)
         return 1
     }
@@ -71,7 +71,7 @@ object NotesService {
     fun editComment(
         commentId: Long,
         message: String,
-        ownerId: Int = THIS_USER_ID
+        ownerId: Int = thisUserId
     ): Int { // Редактирует указанный комментарий у заметки.
         storage.values.forEach { commentsForNote ->
             val s = commentsForNote.find { it.id == commentId }
@@ -108,7 +108,7 @@ object NotesService {
 
     fun getById(noteId: Int, ownerId: Int): Note { // Возвращает заметку по её id
         val result = storage.keys.find { it.id == noteId } ?: throw NotFoundException()
-        return if (result.privacyView == "all" || ownerId == THIS_USER_ID) result
+        return if (result.privacyView == "all" || ownerId == thisUserId) result
         else throw AccessDeniedException("Access denied")
     }
 
@@ -131,7 +131,7 @@ object NotesService {
         fun getFriendsNotes(offset:UInt, count:UInt) // Возвращает список заметок друзей пользователя.
     */
 
-    fun restoreComment(commentId: Long, ownerId: Int = THIS_USER_ID): Int { // Восстанавливает удалённый комментарий.
+    fun restoreComment(commentId: Long, ownerId: Int = thisUserId): Int { // Восстанавливает удалённый комментарий.
         storage.values.forEach { commentsForNote ->
             val s = commentsForNote.find { it.id == commentId }
             if (s != null) {
@@ -147,5 +147,6 @@ object NotesService {
 
     fun clean() {
         storage = mutableMapOf()
+        thisUserId = 734 //Значение по умолчанию
     }
 }
