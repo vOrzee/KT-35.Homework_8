@@ -77,13 +77,30 @@ class NotesServiceTest {
     @Test
     fun editSuccess() {
         NotesService.edit(3,"Новый заголовок 3 заметки","Текст третьей заметки")
-        val notes = NotesService.get(noteIds = *arrayOf(3))
+        val notes = NotesService.get(noteIds = arrayOf(3))
         assertEquals("Текст третьей заметки", notes[0].text)
     }
 
     @Test
     fun editFailed() {
-        assertEquals(0, NotesService.deleteComment(4))
+        assertEquals(0, NotesService.edit(8,"Новый заголовок 3 заметки","Текст третьей заметки"))
+    }
+
+    @Test
+    fun editCommentSuccess() {
+        NotesService.createComment(4,"Обычный комментарий")
+        assertEquals(1, NotesService.editComment(4,"Изменённый комментарий"))
+    }
+
+    @Test
+    fun editCommentFailed() {
+        assertEquals(0, NotesService.editComment(4,"Изменённый комментарий"))
+    }
+
+    @Test(expected = AccessDeniedException::class)
+    fun editCommentFailedAccess() {
+        NotesService.createComment(4,"Обычный комментарий",otherOwnerId)
+        NotesService.editComment(4,"Изменённый комментарий")
     }
 
     @Test
