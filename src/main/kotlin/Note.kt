@@ -1,6 +1,3 @@
-package ru.netology.notes
-
-import Enumerator
 import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
 import java.util.*
@@ -27,6 +24,7 @@ data class Note(
         comments = 0
         readComments = 0
     }
+
     fun fillOutOf(noteChanged: Note): Note {
         val noteAfter: Note = noteChanged
         noteAfter.date = this.date
@@ -35,12 +33,13 @@ data class Note(
         noteAfter.readComments = this.readComments
         return noteAfter
     }
+
     fun getDate(): String =
         SimpleDateFormat("dd.MM.yyyy в HH:mm:ss").format(Date(date.toLong() * 1000))
 
     fun getDateUnixTime() = date
     fun getId() = id
-    fun output():String{
+    fun output(): String {
         return "ID: $id, Date:${getDate()}, " + this.toString() + ". Comment: $comments ($readComments прочитано)"
     }
 }

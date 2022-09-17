@@ -1,8 +1,3 @@
-package ru.netology.notes
-
-import NotFoundException
-import PublishedBeforeException
-
 sealed interface NotesCrud<T : Any> {
 
     fun add(content: T, collection: MutableCollection<T>): Boolean {

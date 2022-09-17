@@ -60,7 +60,7 @@ class NotesServiceTest {
 
     @Test
     fun deleteCommentSuccess() {
-        assertEquals(1, NotesService.deleteComment(3))
+        assertEquals(1, NotesService.deleteComment(2))
     }
 
     @Test
@@ -134,30 +134,34 @@ class NotesServiceTest {
 
 
     @Test
-    fun getCommentsSuccess(){
-        assertEquals(2,NotesService.getComments(1).size)
+    fun getCommentsSuccess() {
+        assertEquals(2, NotesService.getComments(1).size)
     }
+
     @Test
-    fun getCommentsSuccessIsEmpty(){
-        assertEquals(0,NotesService.getComments(2).size)
+    fun getCommentsSuccessIsEmpty() {
+        assertEquals(0, NotesService.getComments(2).size)
     }
+
     @Test
-    fun getCommentsSuccessIsFullStack(){
-        for (i in 1..60){
-            NotesService.createComment(2,"Комментарий №$i")
+    fun getCommentsSuccessIsFullStack() {
+        for (i in 1..60) {
+            NotesService.createComment(2, "Комментарий №$i")
         }
         assertEquals(50, NotesService.getComments(2).size)
     }
+
     @Test(expected = NotFoundException::class)
-    fun getCommentsFailedNotFound(){
+    fun getCommentsFailedNotFound() {
         NotesService.getComments(8)
     }
+
     @Test
     fun restoreCommentSuccess() {
         NotesService.deleteComment(2)
-        assertTrue(NotesService.getComments(1).find { it.id==2L }?.isDeleted ?: false)
+        assertTrue(NotesService.getComments(1).find { it.id == 2L }?.isDeleted ?: false)
         NotesService.restoreComment(2)
-        val check = NotesService.getComments(1).find { it.id==2L }?.isDeleted ?: true
+        val check = NotesService.getComments(1).find { it.id == 2L }?.isDeleted ?: true
         assertTrue(!check)
     }
 
@@ -170,10 +174,10 @@ class NotesServiceTest {
     fun restoreCommentFailedAccess() {
         NotesService.restoreComment(3)
     }
+
     @Test
     fun cleaning() {
         NotesService.clean()
         Enumerator.clear()
     }
-
 }

@@ -1,5 +1,3 @@
-import ru.netology.notes.*
-
 object NotesService {
     var storage: MutableMap<Note, MutableList<CommentNote>> = mutableMapOf()
     var thisUserId: Int = 734 //Значение по умолчанию
@@ -64,14 +62,16 @@ object NotesService {
     ): Int { // Редактирует заметку текущего пользователя.
         val oldContent = storage.keys.find { it.getId() == noteId } ?: return 0
         val comments = storage[oldContent]
-        val newContent = oldContent.fillOutOf(Note(
-            ownerId = thisUserId,
-            title = title,
-            text = text,
-            privacy = privacy,
-            privacyComment = commentPrivacy,
-            privacyView = privacyView,
-            privacyViewComment = privacyComment)
+        val newContent = oldContent.fillOutOf(
+            Note(
+                ownerId = thisUserId,
+                title = title,
+                text = text,
+                privacy = privacy,
+                privacyComment = commentPrivacy,
+                privacyView = privacyView,
+                privacyViewComment = privacyComment
+            )
         )
         storage.remove(oldContent)
         storage[newContent] = comments ?: mutableListOf()
@@ -156,7 +156,7 @@ object NotesService {
     }
 
     fun clean() {
-        storage.clear()
-        thisUserId = 734 //Значение по умолчанию
+        storage.clear() // Каждый раз пересоздавать "тяжеловато" на тестах
+        thisUserId = 734 // Значение по умолчанию
     }
 }

@@ -1,4 +1,3 @@
-package ru.netology.notes
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -8,7 +7,7 @@ data class CommentNote(
     var text: String,
     val replyTo: Long = -1, //Ссылка на ID комментария, которому отвечают
     var isDeleted: Boolean = false
-): NotesCrud<CommentNote> {
+) : NotesCrud<CommentNote> {
     val id: Long
     private var date: Int? = null
 
