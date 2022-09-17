@@ -20,7 +20,7 @@ class NotesServiceTest {
         NotesService.add("Вторая заметка", "Текст в заметке №2")
         NotesService.add("Третья заметка", "Текст в заметке №3")
         NotesService.add("Четвёртая заметка", "Текст в заметке №4", otherOwnerId)
-        NotesService.add("Пятая заметка", "Текст в заметке №5", otherOwnerId)
+        NotesService.add("Пятая заметка", "Текст в заметке №5", otherOwnerId, privacyView = "not for all")
 
         NotesService.createComment(1, "1-ый комментарий для 1-го поста")
         NotesService.createComment(1, "2-ой комментарий для 1-го поста")
@@ -75,31 +75,31 @@ class NotesServiceTest {
 
     @Test
     fun editSuccess() {
-        NotesService.edit(3,"Новый заголовок 3 заметки","Текст третьей заметки")
+        NotesService.edit(3, "Новый заголовок 3 заметки", "Текст третьей заметки")
         val notes = NotesService.get(noteIds = arrayOf(3))
         assertEquals("Текст третьей заметки", notes[0].text)
     }
 
     @Test
     fun editFailed() {
-        assertEquals(0, NotesService.edit(8,"Новый заголовок 3 заметки","Текст третьей заметки"))
+        assertEquals(0, NotesService.edit(8, "Новый заголовок 3 заметки", "Текст третьей заметки"))
     }
 
     @Test
     fun editCommentSuccess() {
-        NotesService.createComment(4,"Обычный комментарий")
-        assertEquals(1, NotesService.editComment(4,"Изменённый комментарий"))
+        NotesService.createComment(4, "Обычный комментарий")
+        assertEquals(1, NotesService.editComment(4, "Изменённый комментарий"))
     }
 
     @Test
     fun editCommentFailed() {
-        assertEquals(0, NotesService.editComment(4,"Изменённый комментарий"))
+        assertEquals(0, NotesService.editComment(4, "Изменённый комментарий"))
     }
 
     @Test(expected = AccessDeniedException::class)
     fun editCommentFailedAccess() {
-        NotesService.createComment(4,"Обычный комментарий",otherOwnerId)
-        NotesService.editComment(4,"Изменённый комментарий")
+        NotesService.createComment(4, "Обычный комментарий", otherOwnerId)
+        NotesService.editComment(4, "Изменённый комментарий")
     }
 
     @Test
@@ -111,9 +111,25 @@ class NotesServiceTest {
     fun getSuccessForUser() {
         assertTrue(NotesService.get(thisUserId).isNotEmpty())
     }
+
     @Test
     fun getFailed() {
         assertEquals(0, NotesService.get(noteIds = arrayOf(15, 89)).size)
+    }
+
+    @Test
+    fun getByIdSuccess() {
+        assertEquals("Вторая заметка", NotesService.getById(2, thisUserId).title)
+    }
+
+    @Test(expected = NotFoundException::class)
+    fun getByIdFailedNF() {
+        NotesService.getById(15, thisUserId)
+    }
+
+    @Test(expected = AccessDeniedException::class)
+    fun getByIdFailedAD() {
+        NotesService.getById(5, thisUserId)
     }
 
     @Test

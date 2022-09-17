@@ -118,7 +118,7 @@ object NotesService {
 
     fun getById(noteId: Int, ownerId: Int): Note { // Возвращает заметку по её id
         val result = storage.keys.find { it.getId() == noteId } ?: throw NotFoundException()
-        return if (result.privacyView == "all" || ownerId == thisUserId) result
+        return if (result.privacyView == "all" || result.ownerId == ownerId) result
         else throw AccessDeniedException("Access denied")
     }
 
