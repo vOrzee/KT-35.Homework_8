@@ -12,13 +12,10 @@ data class CommentNote(
     val id: Long
     private var date: Int? = null
 
-    companion object {
-        private var count: Long = 0
-    }
 
     init {
-        count += 1
-        id = count
+        Enumerator.countCommentsNote += 1
+        id = Enumerator.countCommentsNote
         date = (System.currentTimeMillis() / 1000).toInt()
     }
 

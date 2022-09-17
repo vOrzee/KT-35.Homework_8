@@ -1,5 +1,6 @@
 package ru.netology.notes
 
+import Enumerator
 import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,13 +19,9 @@ data class Note(
     var comments: Int = 0
     var readComments: Int = 0
 
-    companion object {
-        private var count: Int = 0
-    }
-
     init {
-        count += 1
-        id = count
+        Enumerator.countNotes += 1
+        id = Enumerator.countNotes
         sleep(kotlin.random.Random.nextInt(5000).toLong())
         date = (System.currentTimeMillis() / 1000).toInt()
         comments = 0

@@ -20,11 +20,25 @@ class NotesServiceTest {
         NotesService.add("Третья заметка", "Текст в заметке №3")
         NotesService.add("Четвёртая заметка", "Текст в заметке №4", otherOwnerId)
         NotesService.add("Пятая заметка", "Текст в заметке №5", otherOwnerId)
-        NotesService.add("Шестая заметка", "Текст в заметке №6", otherOwnerId)
 
         NotesService.createComment(1, "1-ый комментарий для 1-го поста")
         NotesService.createComment(1, "2-ой комментарий для 1-го поста")
-        NotesService.createComment(1, "3-ий комментарий для 1-го поста")
+        NotesService.createComment(3, "1-Ый комментарий для 3-го поста")
+    }
+
+    @Test
+    fun addSuccess(){
+        assertEquals(6,NotesService.add("Шестая заметка", "Текст в заметке №7", otherOwnerId))
+    }
+
+    @Test
+    fun createCommentSuccess(){
+        assertEquals(4,NotesService.createComment(2,"Комментарий ко 2-ой заметке"))
+    }
+
+    @Test (expected = NotFoundException::class)
+    fun createCommentFailed(){
+        assertEquals(4,NotesService.createComment(6,"Комментарий ко 2-ой заметке"))
     }
 
 
