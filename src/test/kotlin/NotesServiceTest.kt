@@ -131,6 +131,27 @@ class NotesServiceTest {
     fun getByIdFailedAD() {
         NotesService.getById(5, thisUserId)
     }
+
+
+    @Test
+    fun getCommentsSuccess(){
+        assertEquals(2,NotesService.getComments(1).size)
+    }
+    @Test
+    fun getCommentsSuccessIsEmpty(){
+        assertEquals(0,NotesService.getComments(2).size)
+    }
+    @Test
+    fun getCommentsSuccessIsFullStack(){
+        for (i in 1..60){
+            NotesService.createComment(2,"Комментарий №$i")
+        }
+        assertEquals(50, NotesService.getComments(2).size)
+    }
+    @Test(expected = NotFoundException::class)
+    fun getCommentsFailedNotFound(){
+        NotesService.getComments(8)
+    }
     @Test
     fun restoreCommentSuccess() {
         NotesService.deleteComment(2)
