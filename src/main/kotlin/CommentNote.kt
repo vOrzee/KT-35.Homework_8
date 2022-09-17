@@ -9,7 +9,7 @@ data class CommentNote(
     val replyTo: Long = -1, //Ссылка на ID комментария, которому отвечают
     var isDeleted: Boolean = false
 ): NotesCrud<CommentNote> {
-    private val id: Long
+    val id: Long
     private var date: Int? = null
 
     companion object {
@@ -26,6 +26,5 @@ data class CommentNote(
         if (date != null) SimpleDateFormat("dd.MM.yyyy в HH:mm:ss").format(Date(((date ?: 0) * 1000).toLong()))
         else "Запись ещё не опубликована"
 
-    fun getID() = id
     fun getDateUnixTime() = date
 }

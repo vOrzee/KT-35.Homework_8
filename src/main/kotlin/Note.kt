@@ -1,9 +1,11 @@
 package ru.netology.notes
+
+import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
 import java.util.*
 
 data class Note(
-    val ownerId:Int,
+    val ownerId: Int,
     val title: String,
     val text: String,
     val privacy: Byte = 0,
@@ -11,11 +13,11 @@ data class Note(
     val privacyView: String = "all",
     val privacyViewComment: String = "all",
     val isDeleted: Boolean = false
-):NotesCrud<Note> {
-    private val id: Int
-    private var date: Int? = null
-    private var comments:Int = 0
-    private var readComments:Int = 0
+) : NotesCrud<Note> {
+    val id: Int
+    private val date: Int
+    var comments: Int = 0
+    var readComments: Int = 0
 
     companion object {
         private var count: Int = 0
@@ -24,15 +26,18 @@ data class Note(
     init {
         count += 1
         id = count
+        sleep(kotlin.random.Random.nextInt(5000).toLong())
         date = (System.currentTimeMillis() / 1000).toInt()
         comments = 0
         readComments = 0
     }
 
     fun getDate(): String =
-        if (date != null) SimpleDateFormat("dd.MM.yyyy в HH:mm:ss").format(Date(((date ?: 0) * 1000).toLong()))
-        else "Запись ещё не опубликована"
+        SimpleDateFormat("dd.MM.yyyy в HH:mm:ss").format(Date(date.toLong() * 1000))
 
-    fun getID() = id
     fun getDateUnixTime() = date
+
+    fun output():String{
+        return "ID: $id, Date:${getDate()}, " + this.toString() + ". Comment: $comments ($readComments прочитано)"
+    }
 }
