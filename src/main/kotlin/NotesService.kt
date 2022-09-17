@@ -146,7 +146,7 @@ object NotesService {
     }
 
     fun clean() {
-        storage = mutableMapOf()
+        storage.clear()
         thisUserId = 734 //Значение по умолчанию
     }
 }

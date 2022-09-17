@@ -2,15 +2,18 @@ import org.junit.Before
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.junit.BeforeClass
 import kotlin.random.Random
 
 class NotesServiceTest {
-    private val thisUserId: Int = NotesService.thisUserId
+    var thisUserId: Int = NotesService.thisUserId
     var otherOwnerId: Int = NotesService.thisUserId
 
+
     @Before
-    fun prepare() {
+    fun launch() {
         NotesService.clean()
+        Enumerator.clear()
         while (otherOwnerId == thisUserId) {
             otherOwnerId = Random.nextInt(1000)
         }
@@ -74,5 +77,6 @@ class NotesServiceTest {
     @Test
     fun cleaning() {
         NotesService.clean()
+        Enumerator.clear()
     }
 }
