@@ -24,7 +24,7 @@ class NotesServiceTest {
 
         NotesService.createComment(1, "1-ый комментарий для 1-го поста")
         NotesService.createComment(1, "2-ой комментарий для 1-го поста")
-        NotesService.createComment(3, "1-Ый комментарий для 3-го поста")
+        NotesService.createComment(3, "1-Ый комментарий для 3-го поста", otherOwnerId)
     }
 
     @Test
@@ -131,7 +131,24 @@ class NotesServiceTest {
     fun getByIdFailedAD() {
         NotesService.getById(5, thisUserId)
     }
+    @Test
+    fun restoreCommentSuccess() {
+        NotesService.deleteComment(2)
+        assertTrue(NotesService.getComments(1).find { it.id==2L }?.isDeleted ?: false)
+        NotesService.restoreComment(2)
+        val check = NotesService.getComments(1).find { it.id==2L }?.isDeleted ?: true
+        assertTrue(!check)
+    }
 
+    @Test
+    fun restoreCommentFailed() {
+        assertEquals(0, NotesService.restoreComment(10))
+    }
+
+    @Test(expected = AccessDeniedException::class)
+    fun restoreCommentFailedAccess() {
+        NotesService.restoreComment(3)
+    }
     @Test
     fun cleaning() {
         NotesService.clean()
