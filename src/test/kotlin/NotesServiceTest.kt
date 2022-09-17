@@ -1,7 +1,7 @@
 import org.junit.Before
+import org.junit.Test
 
 import org.junit.Assert.*
-import org.junit.Test
 import kotlin.random.Random
 
 class NotesServiceTest {
@@ -26,34 +26,49 @@ class NotesServiceTest {
     }
 
     @Test
-    fun addSuccess(){
-        assertEquals(6,NotesService.add("Шестая заметка", "Текст в заметке №7", otherOwnerId))
+    fun addSuccess() {
+        assertEquals(6, NotesService.add("Шестая заметка", "Текст в заметке №7", otherOwnerId))
     }
 
     @Test
-    fun createCommentSuccess(){
-        assertEquals(4,NotesService.createComment(2,"Комментарий ко 2-ой заметке"))
+    fun createCommentSuccess() {
+        assertEquals(4, NotesService.createComment(2, "Комментарий ко 2-ой заметке"))
     }
 
-    @Test (expected = NotFoundException::class)
-    fun createCommentFailed(){
-        NotesService.createComment(6,"Комментарий ко 2-ой заметке")
-    }
-
-    @Test
-    fun deleteSuccess(){
-        assertEquals(1,NotesService.delete(2))
+    @Test(expected = NotFoundException::class)
+    fun createCommentFailed() {
+        NotesService.createComment(6, "Комментарий ко 2-ой заметке")
     }
 
     @Test
-    fun deleteFailed(){
-        assertEquals(0,NotesService.delete(6))
+    fun deleteSuccess() {
+        assertEquals(1, NotesService.delete(2))
     }
 
-    @Test (expected = AccessDeniedException::class)
-    fun deleteFailedAccess(){
+    @Test
+    fun deleteFailed() {
+        assertEquals(0, NotesService.delete(6))
+    }
+
+    @Test(expected = AccessDeniedException::class)
+    fun deleteFailedAccess() {
         NotesService.thisUserId = 5
         NotesService.delete(2)
+    }
+
+    @Test
+    fun deleteCommentSuccess() {
+        assertEquals(1, NotesService.deleteComment(3))
+    }
+
+    @Test
+    fun deleteCommentFailed() {
+        assertEquals(0, NotesService.deleteComment(4))
+    }
+
+    @Test(expected = AccessDeniedException::class)
+    fun deleteCommentFailedAccess() {
+        NotesService.deleteComment(2, otherOwnerId)
     }
 
     @Test
