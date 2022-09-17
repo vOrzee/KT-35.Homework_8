@@ -11,8 +11,7 @@ data class Note(
     val privacy: Byte = 0,
     val privacyComment: Byte = 0,
     val privacyView: String = "all",
-    val privacyViewComment: String = "all",
-    val isDeleted: Boolean = false
+    val privacyViewComment: String = "all"
 ) : NotesCrud<Note> {
     val id: Int
     private val date: Int

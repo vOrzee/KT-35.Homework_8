@@ -4,10 +4,10 @@ import PublishedBeforeException
 
 sealed interface NotesCrud<T>{
 
-    fun add(content: T, collection: MutableCollection<T>): T {
-        if(collection.contains(content)) throw PublishedBeforeException()
+    fun add(content: T, collection: MutableCollection<T>): Boolean {
+        if(collection.contains(content)) return false
         collection.add(content)
-        return collection.last()
+        return true
     }
     fun get(collection: MutableCollection<T>): MutableCollection<T> {
         return collection
