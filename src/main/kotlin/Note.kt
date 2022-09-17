@@ -14,8 +14,8 @@ data class Note(
     val privacyView: String = "all",
     val privacyViewComment: String = "all"
 ) : NotesCrud<Note> {
-    val id: Int
-    private val date: Int
+    private var id: Int
+    private var date: Int
     var comments: Int = 0
     var readComments: Int = 0
 
@@ -27,12 +27,19 @@ data class Note(
         comments = 0
         readComments = 0
     }
-
+    fun fillOutOf(noteChanged: Note): Note {
+        val noteAfter: Note = noteChanged
+        noteAfter.date = this.date
+        noteAfter.id = this.id
+        noteAfter.comments = this.comments
+        noteAfter.readComments = this.readComments
+        return noteAfter
+    }
     fun getDate(): String =
         SimpleDateFormat("dd.MM.yyyy в HH:mm:ss").format(Date(date.toLong() * 1000))
 
     fun getDateUnixTime() = date
-
+    fun getId() = id
     fun output():String{
         return "ID: $id, Date:${getDate()}, " + this.toString() + ". Comment: $comments ($readComments прочитано)"
     }

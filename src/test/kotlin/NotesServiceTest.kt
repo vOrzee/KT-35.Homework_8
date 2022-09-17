@@ -75,8 +75,22 @@ class NotesServiceTest {
     }
 
     @Test
+    fun editSuccess() {
+        NotesService.edit(3,"Новый заголовок 3 заметки","Текст третьей заметки")
+        val notes = NotesService.get(noteIds = *arrayOf(3))
+        assertEquals("Текст третьей заметки", notes[0].text)
+    }
+
+    @Test
+    fun editFailed() {
+        assertEquals(0, NotesService.deleteComment(4))
+    }
+
+    @Test
     fun cleaning() {
         NotesService.clean()
         Enumerator.clear()
     }
+
+
 }

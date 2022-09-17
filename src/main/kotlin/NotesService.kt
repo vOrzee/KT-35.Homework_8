@@ -15,7 +15,7 @@ object NotesService {
     ): Int { // Создает новую заметку у текущего пользователя.
         val note = Note(ownerId, title, text, privacy, commentPrivacy, privacyView, privacyComment)
         storage[note] = mutableListOf()
-        return storage.keys.find { it == note }?.id ?: throw NotFoundException()
+        return storage.keys.find { it == note }?.getId() ?: throw NotFoundException()
     }
 
     fun createComment(
@@ -25,14 +25,14 @@ object NotesService {
         replyTo: Long = -1
     ): Long { // Добавляет новый комментарий к заметке.
         // Параметр guid: String не используется
-        val note = storage.keys.find { it.id == noteId } ?: throw NotFoundException()
+        val note = storage.keys.find { it.getId() == noteId } ?: throw NotFoundException()
         val comment = CommentNote(ownerId, noteId, message, replyTo)
         storage[note]?.add(comment)
         return comment.id
     }
 
     fun delete(noteId: Int): Int { // Удаляет заметку текущего пользователя.
-        val note = storage.keys.find { it.id == noteId } ?: return 0
+        val note = storage.keys.find { it.getId() == noteId } ?: return 0
         if (note.ownerId != thisUserId) throw AccessDeniedException("Access denied")
         note.delete(note, storage.keys)
         if (storage.containsKey(note)) return 0
@@ -62,9 +62,19 @@ object NotesService {
         privacyView: String = "all",
         privacyComment: String = "all"
     ): Int { // Редактирует заметку текущего пользователя.
-        val oldContent = storage.keys.find { it.id == noteId } ?: return 0
-        val newContent = Note(thisUserId, title, text, privacy, commentPrivacy, privacyView, privacyComment)
-        oldContent.edit(oldContent, newContent, storage.keys)
+        val oldContent = storage.keys.find { it.getId() == noteId } ?: return 0
+        val comments = storage[oldContent]
+        val newContent = oldContent.fillOutOf(Note(
+            ownerId = thisUserId,
+            title = title,
+            text = text,
+            privacy = privacy,
+            privacyComment = commentPrivacy,
+            privacyView = privacyView,
+            privacyViewComment = privacyComment)
+        )
+        storage.remove(oldContent)
+        storage[newContent] = comments ?: mutableListOf()
         return 1
     }
 
@@ -99,7 +109,7 @@ object NotesService {
             result = result.filter { it.ownerId == userId }.toMutableSet()
         }
         if (noteIds.isNotEmpty()) {
-            result = result.filter { noteIds.contains(it.id) }.toMutableSet()
+            result = result.filter { noteIds.contains(it.getId()) }.toMutableSet()
         }
         if (!isAscendingSort) result.sortedByDescending { it.getDateUnixTime() }
         else result.sortedBy { it.getDateUnixTime() }
@@ -107,7 +117,7 @@ object NotesService {
     }
 
     fun getById(noteId: Int, ownerId: Int): Note { // Возвращает заметку по её id
-        val result = storage.keys.find { it.id == noteId } ?: throw NotFoundException()
+        val result = storage.keys.find { it.getId() == noteId } ?: throw NotFoundException()
         return if (result.privacyView == "all" || ownerId == thisUserId) result
         else throw AccessDeniedException("Access denied")
     }
@@ -119,7 +129,7 @@ object NotesService {
         count: Int = 50
     ): Array<CommentNote> { // Возвращает список комментариев к заметке.
         //Идентификатор ownerId здесь опущен, т.к. его можно взять из заметки
-        val note = storage.keys.find { it.id == noteId } ?: throw NotFoundException("Заметка не найдена")
+        val note = storage.keys.find { it.getId() == noteId } ?: throw NotFoundException("Заметка не найдена")
         val comments = storage[note] ?: return emptyArray()
         if (!isAscendingSort) comments.sortedByDescending { it.getDateUnixTime() }
         else comments.sortedBy { it.getDateUnixTime() }
