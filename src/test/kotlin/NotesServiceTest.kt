@@ -176,5 +176,4 @@ class NotesServiceTest {
         Enumerator.clear()
     }
 
-
 }
