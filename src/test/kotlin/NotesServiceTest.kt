@@ -2,7 +2,6 @@ import org.junit.Before
 import org.junit.Test
 
 import org.junit.Assert.*
-import org.junit.BeforeClass
 import kotlin.random.Random
 
 class NotesServiceTest {
@@ -101,6 +100,20 @@ class NotesServiceTest {
     fun editCommentFailedAccess() {
         NotesService.createComment(4,"Обычный комментарий",otherOwnerId)
         NotesService.editComment(4,"Изменённый комментарий")
+    }
+
+    @Test
+    fun getSuccess() {
+        assertEquals("Первая заметка", NotesService.get(noteIds = arrayOf(1))[0].title)
+    }
+
+    @Test
+    fun getSuccessForUser() {
+        assertTrue(NotesService.get(thisUserId).isNotEmpty())
+    }
+    @Test
+    fun getFailed() {
+        assertEquals(0, NotesService.get(noteIds = arrayOf(15, 89)).size)
     }
 
     @Test
